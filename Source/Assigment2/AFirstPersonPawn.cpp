@@ -2,6 +2,11 @@
 
 
 #include "AFirstPersonPawn.h"
+#include "PawnController.h"		
+#include "C:\Program Files\Epic Games\UE_5.2\Engine\Plugins\EnhancedInput\Source\EnhancedInput\Public\EnhancedInputComponent.h"
+#include "C:\Program Files\Epic Games\UE_5.2\Engine\Plugins\EnhancedInput\Source\EnhancedInput\Public\EnhancedInputSubsystems.h"
+#include "GameFrameWork/FloatingPawnMovement.h"
+
 
 // Sets default values
 AAFirstPersonPawn::AAFirstPersonPawn()
@@ -10,7 +15,10 @@ AAFirstPersonPawn::AAFirstPersonPawn()
 	PrimaryActorTick.bCanEverTick = true;
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
 	RootComponent = CameraComponent;
-
+	pMovement = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("Movement"));
+	MoveScale = 1.0f;
+	RotateScale = 50.f;
+		
 }
 
 // Called when the game starts or when spawned
@@ -32,10 +40,23 @@ void AAFirstPersonPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	PlayerInputComponent->BindAxis("MoveForward", this, &AAFirstPersonPawn::MoveForward);
+	UEnhancedInputComponent* EIC = Cast<UEnhancedInputComponent>(PlayerInputComponent);
+	APawnController* PPC = Cast<APawnController>(Controller);
+
+	check(PPC && EIC);
+	EIC->BindAction(PPC->MoveAction, ETriggerEvent::Triggered, this, &AAFirstPersonPawn::Move);
+	EIC->BindAction(PPC->RotateAction, ETriggerEvent::Triggered, this, &AAFirstPersonPawn::Rotate);
+	ULocalPlayer* LocalPlayer = PPC->GetLocalPlayer();
+	check(LocalPlayer);
+	UEnhancedInputLocalPlayerSubsystem* Subsystem = LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
+	check(Subsystem);
+	Subsystem->ClearAllMappings();
+	Subsystem->AddMappingContext(PPC->PawnMappingContext, 0);
+	//PPC->bShowMouseCursor = true;
+	/*PlayerInputComponent->BindAxis("MoveForward", this, &AAFirstPersonPawn::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AAFirstPersonPawn::MoveRight);
 	PlayerInputComponent->BindAxis("LookUp", this, &AAFirstPersonPawn::LookUp);
-	PlayerInputComponent->BindAxis("LookRight", this, &AAFirstPersonPawn::LookRight);
+	PlayerInputComponent->BindAxis("LookRight", this, &AAFirstPersonPawn::LookRight);*/
 
 }
 
@@ -60,10 +81,22 @@ void AAFirstPersonPawn::MoveForward(float Value)
 }
 
 
-void AAFirstPersonPawn::MoveRight(float Value)
+void AAFirstPersonPawn::Move(const FInputActionValue& ActionValue)
 {
-	
+	FVector Input = ActionValue.Get<FVector>();
+	AddMovementInput(GetActorRotation().RotateVector(Input), MoveScale);
 }
+
+void AAFirstPersonPawn::Rotate(const FInputActionValue& ActionValue)
+{
+	FRotator Input(ActionValue[0], ActionValue[1], ActionValue[2]);
+	Input *= GetWorld()->GetDeltaSeconds() * RotateScale;
+	Input += GetActorRotation();
+	Input.Pitch = FMath::ClampAngle(Input.Pitch, -89.9f, 89.9f);
+	Input.Roll = 0;
+	SetActorRotation(Input);
+}
+
 
 void AAFirstPersonPawn::LookUp(float Value)
 {

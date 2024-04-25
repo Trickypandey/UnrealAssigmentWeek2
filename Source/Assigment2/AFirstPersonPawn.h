@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "Camera/CameraComponent.h"
+#include "C:\Program Files\Epic Games\UE_5.2\Engine\Plugins\EnhancedInput\Source\EnhancedInput\Public\InputModifiers.h"
 #include "AFirstPersonPawn.generated.h"
 
 UCLASS()
@@ -20,7 +21,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	void MoveForward(float Value);
-	void MoveRight(float Value);
+	//void MoveRight(float Value);
 	void LookUp(float Value);
 	void LookRight(float Value);
 
@@ -30,6 +31,17 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	void Move(const struct FInputActionValue& ActionValue);
+	void Rotate(const struct FInputActionValue& ActionValue);
+
+	UPROPERTY()
+	class UFloatingPawnMovement* pMovement;
+
+	UPROPERTY(EditAnywhere)
+	float MoveScale;
+	
+	UPROPERTY(EditAnywhere)
+	float RotateScale;
 
 
 private:
