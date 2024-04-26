@@ -14,19 +14,12 @@ class ASSIGMENT2_API APawnController : public APlayerController
 {
 	GENERATED_BODY()
 public:
-	virtual void SetupInputComponent() override;
+	
 
+	APawnController();
 	
 	
-	UPROPERTY()
-	class UInputMappingContext* PawnMappingContext;
-
-	UPROPERTY()
-	class UInputAction* MoveAction;
 	
-	
-	UPROPERTY()
-	UInputAction* RotateAction;
 	
 	
 

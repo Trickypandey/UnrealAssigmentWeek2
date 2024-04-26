@@ -3,11 +3,29 @@
 
 #include "AFirstPersonPawn.h"
 #include "PawnController.h"		
-#include "C:\Program Files\Epic Games\UE_5.2\Engine\Plugins\EnhancedInput\Source\EnhancedInput\Public\EnhancedInputComponent.h"
-#include "C:\Program Files\Epic Games\UE_5.2\Engine\Plugins\EnhancedInput\Source\EnhancedInput\Public\EnhancedInputSubsystems.h"
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
 #include "GameFrameWork/FloatingPawnMovement.h"
+#include "InputMappingContext.h"
 
+static void KeyMap(UInputMappingContext* InputMappingContext, UInputAction* InputAction, FKey Key, bool bNegate = false
+	, bool bSwizzle = false, EInputAxisSwizzle SwizzeleOrder = EInputAxisSwizzle::YXZ)
+{
 
+	auto& Mapping = InputMappingContext->MapKey(InputAction, Key);
+	auto* Outer = InputMappingContext->GetOuter();
+	if (bNegate)
+	{
+		auto* Negate = NewObject<UInputModifierNegate>(Outer);
+		Mapping.Modifiers.Add(Negate);
+	}
+	if (bSwizzle)
+	{
+		auto* Swizzle = NewObject<UInputModifierSwizzleAxis>(Outer);
+		Swizzle->Order = SwizzeleOrder;
+		Mapping.Modifiers.Add(Swizzle);
+	}
+}
 // Sets default values
 AAFirstPersonPawn::AAFirstPersonPawn()
 {
@@ -35,30 +53,6 @@ void AAFirstPersonPawn::Tick(float DeltaTime)
 
 }
 
-// Called to bind functionality to input
-void AAFirstPersonPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) 
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-	UEnhancedInputComponent* EIC = Cast<UEnhancedInputComponent>(PlayerInputComponent);
-	APawnController* PPC = Cast<APawnController>(Controller);
-
-	check(PPC && EIC);
-	EIC->BindAction(PPC->MoveAction, ETriggerEvent::Triggered, this, &AAFirstPersonPawn::Move);
-	EIC->BindAction(PPC->RotateAction, ETriggerEvent::Triggered, this, &AAFirstPersonPawn::Rotate);
-	ULocalPlayer* LocalPlayer = PPC->GetLocalPlayer();
-	check(LocalPlayer);
-	UEnhancedInputLocalPlayerSubsystem* Subsystem = LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
-	check(Subsystem);
-	Subsystem->ClearAllMappings();
-	Subsystem->AddMappingContext(PPC->PawnMappingContext, 0);
-	//PPC->bShowMouseCursor = true;
-	/*PlayerInputComponent->BindAxis("MoveForward", this, &AAFirstPersonPawn::MoveForward);
-	PlayerInputComponent->BindAxis("MoveRight", this, &AAFirstPersonPawn::MoveRight);
-	PlayerInputComponent->BindAxis("LookUp", this, &AAFirstPersonPawn::LookUp);
-	PlayerInputComponent->BindAxis("LookRight", this, &AAFirstPersonPawn::LookRight);*/
-
-}
 
 void AAFirstPersonPawn::MoveForward(float Value)
 {
@@ -107,4 +101,41 @@ void AAFirstPersonPawn::LookRight(float Value)
 {
 	
 }
+void AAFirstPersonPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	PawnMappingContext = NewObject<UInputMappingContext>(this);
+
+	MoveAction = NewObject<UInputAction>(this);
+	MoveAction->ValueType = EInputActionValueType::Axis3D;
+	KeyMap(PawnMappingContext, MoveAction, EKeys::W);
+	KeyMap(PawnMappingContext, MoveAction, EKeys::S, true);
+	KeyMap(PawnMappingContext, MoveAction, EKeys::A, true, true);
+	KeyMap(PawnMappingContext, MoveAction, EKeys::D, false, true);
+	KeyMap(PawnMappingContext, MoveAction, EKeys::E, true, true, EInputAxisSwizzle::ZYX);
+	KeyMap(PawnMappingContext, MoveAction, EKeys::Q, false, true, EInputAxisSwizzle::ZYX);
+
+	RotateAction = NewObject<UInputAction>(this);
+	RotateAction->ValueType = EInputActionValueType::Axis2D;
+
+	KeyMap(PawnMappingContext, RotateAction, EKeys::MouseY);
+	KeyMap(PawnMappingContext, RotateAction, EKeys::MouseX, false, true);
+
+	UEnhancedInputComponent* EIC = Cast<UEnhancedInputComponent>(PlayerInputComponent);
+
+	APlayerController* FPC = Cast<APlayerController>(Controller);
+
+	check(EIC && FPC);
+
+	EIC->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AAFirstPersonPawn::Move);
+	EIC->BindAction(RotateAction, ETriggerEvent::Triggered, this, &AAFirstPersonPawn::Rotate);
+	ULocalPlayer* LocalPlayer = FPC->GetLocalPlayer();
+	check(LocalPlayer);
+
+	UEnhancedInputLocalPlayerSubsystem* Subsystem = LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
+	check(Subsystem);
+
+	Subsystem->ClearAllMappings();
+	Subsystem->AddMappingContext(PawnMappingContext, 0);
+}

@@ -16,6 +16,16 @@ class ASSIGMENT2_API AAFirstPersonPawn : public APawn
 public:
 	// Sets default values for this pawn's properties
 	AAFirstPersonPawn();
+	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+	UPROPERTY()
+	class UInputMappingContext* PawnMappingContext;
+
+	UPROPERTY()
+	class UInputAction* MoveAction;
+
+
+	UPROPERTY()
+	UInputAction* RotateAction;
 
 protected:
 	// Called when the game starts or when spawned
@@ -29,8 +39,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	// Called to bind functionality to inpu
 	void Move(const struct FInputActionValue& ActionValue);
 	void Rotate(const struct FInputActionValue& ActionValue);
 

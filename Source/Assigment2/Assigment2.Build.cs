@@ -14,10 +14,11 @@ public class Assigment2 : ModuleRules
             "Engine",
             "EnhancedInput",
             "InputCore",
-            "UMG"
+            "UMG",
+            "AIModule", "Niagara", "EnhancedInput"
         });
 
-        PublicIncludePaths.AddRange(new string[] { "EnhanceInput/Public" });/**/
+        PublicIncludePaths.AddRange(new string[] {  });/**/
         //PublicIncludePaths.AddRange(new string[] { "C:\\Program Files\\Epic Games\\UE_5.2\\Engine\\Plugins\\EnhancedInput\\Source\\EnhancedInput\\Public" });
 
         PrivateDependencyModuleNames.AddRange(new string[] { });
