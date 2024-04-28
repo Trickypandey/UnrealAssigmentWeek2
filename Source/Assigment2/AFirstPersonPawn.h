@@ -5,7 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "Camera/CameraComponent.h"
-#include "C:\Program Files\Epic Games\UE_5.2\Engine\Plugins\EnhancedInput\Source\EnhancedInput\Public\InputModifiers.h"
+#include "InputModifiers.h"
+#include "../Public/BaseCharacter.h"
 #include "AFirstPersonPawn.generated.h"
 
 UCLASS()

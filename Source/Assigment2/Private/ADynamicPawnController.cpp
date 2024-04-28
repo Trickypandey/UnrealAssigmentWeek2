@@ -39,7 +39,6 @@ void AADynamicPawnController::SpawnCharacter()
 		if (RowData)
 		{
 			GEngine->AddOnScreenDebugMessage(-1,1,FColor::Red,"RowData");
-
 			TSubclassOf<APawn> CharacterClassToSpawn = RowData->PawnClass;
 			if (CharacterClassToSpawn)
 			{
@@ -61,10 +60,10 @@ void AADynamicPawnController::SpawnCharacter()
 
 					if (RowData->CharacterType == EPawnType::TopDown) {
 						SetShowMouseCursor(true);
-						// DisplayAttributes((Cast<ABaseCharacter>(SpawnedPawn))->PawnAttributeAsset);
+						 DisplayAttributes((Cast<ABaseCharacter>(SpawnedPawn))->PawnAttributes);
 					}
 					else if (RowData->CharacterType == EPawnType::ThirdPerson) {
-						// DisplayAttributes((Cast<ABaseCharacter>(SpawnedPawn))->PawnAttributeAsset);
+						DisplayAttributes((Cast<ABaseCharacter>(SpawnedPawn))->PawnAttributes);
 					}
 					else {
 						// DisplayAttributes((Cast<AFirstPersonPawn>(SpawnedPawn))->PawnAttributeAsset);

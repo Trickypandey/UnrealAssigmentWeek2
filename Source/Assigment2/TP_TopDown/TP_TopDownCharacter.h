@@ -3,11 +3,11 @@
 #include "CoreMinimal.h"
 #include "NiagaraSystem.h"
 #include "GameFramework/Character.h"
-//#include "../Public/BaseCharacter.h"
+#include "../Public/BaseCharacter.h"
 #include "TP_TopDownCharacter.generated.h"
 
 UCLASS(Blueprintable)
-class ATP_TopDownCharacter : public ACharacter
+class ATP_TopDownCharacter : public ABaseCharacter
 {
 	GENERATED_BODY()
 

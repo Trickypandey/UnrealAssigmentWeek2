@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "BaseCharacter.h"
+
 #include "FPawnAttributesStruct.h"
 #include "ADynamicPawnController.generated.h"
 
@@ -30,7 +32,8 @@ protected:
 
     void SpawnCharacter();
 
-    //void DisplayAttributes(FPawnAttributesStruct* AttributeAsset);
+    UFUNCTION(BlueprintImplementableEvent)
+    void DisplayAttributes(UPawnAttributeAsset* AttributeAsset);
 
     void SetupInputComponent() override;
 
