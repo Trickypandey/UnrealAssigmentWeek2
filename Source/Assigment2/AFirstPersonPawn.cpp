@@ -36,6 +36,8 @@ AAFirstPersonPawn::AAFirstPersonPawn()
 	pMovement = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("Movement"));
 	MoveScale = 1.0f;
 	RotateScale = 50.f;
+
+	PawnAttributes=LoadObject<UPawnAttributeAsset>(nullptr, TEXT("/Script/Assigment2.PawnAttributeAsset'/Game/DataAsserts/DT_FirstPerson.DT_FirstPerson'"));
 		
 }
 
@@ -106,15 +108,15 @@ void AAFirstPersonPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	PawnMappingContext = NewObject<UInputMappingContext>(this);
-
+	 
 	MoveAction = NewObject<UInputAction>(this);
 	MoveAction->ValueType = EInputActionValueType::Axis3D;
 	KeyMap(PawnMappingContext, MoveAction, EKeys::W);
 	KeyMap(PawnMappingContext, MoveAction, EKeys::S, true);
 	KeyMap(PawnMappingContext, MoveAction, EKeys::A, true, true);
 	KeyMap(PawnMappingContext, MoveAction, EKeys::D, false, true);
-	KeyMap(PawnMappingContext, MoveAction, EKeys::E, true, true, EInputAxisSwizzle::ZYX);
-	KeyMap(PawnMappingContext, MoveAction, EKeys::Q, false, true, EInputAxisSwizzle::ZYX);
+	KeyMap(PawnMappingContext, MoveAction, EKeys::Q, true, true, EInputAxisSwizzle::ZYX);
+	KeyMap(PawnMappingContext, MoveAction, EKeys::E, false, true, EInputAxisSwizzle::ZYX);
 
 	RotateAction = NewObject<UInputAction>(this);
 	RotateAction->ValueType = EInputActionValueType::Axis2D;
@@ -139,3 +141,4 @@ void AAFirstPersonPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	Subsystem->ClearAllMappings();
 	Subsystem->AddMappingContext(PawnMappingContext, 0);
 }
+

@@ -13,19 +13,19 @@ void AADynamicPawnController::BeginPlay()
 
 void AADynamicPawnController::SpawnCharacter()
 {
-		GEngine->AddOnScreenDebugMessage(-1,1,FColor::Red,"S");
+		
 	if (CurrentlySpawnedActor)
 	{
 		CurrentlySpawnedActor->Destroy();
 		CurrentlySpawnedActor = nullptr;
 		CurrentActorIndex++;
 		SetShowMouseCursor(false);
-		GEngine->AddOnScreenDebugMessage(-1,1,FColor::Red,"Destroy");
+		
 	}
 
 	if (MyDataTable)
 	{
-		GEngine->AddOnScreenDebugMessage(-1,1,FColor::Red,"T");
+		
 		TArray<FName> RowNames = MyDataTable->GetRowNames();
 
 		if (RowNames.Num() == CurrentActorIndex) {
@@ -38,7 +38,7 @@ void AADynamicPawnController::SpawnCharacter()
 
 		if (RowData)
 		{
-			GEngine->AddOnScreenDebugMessage(-1,1,FColor::Red,"RowData");
+			
 			TSubclassOf<APawn> CharacterClassToSpawn = RowData->PawnClass;
 			if (CharacterClassToSpawn)
 			{
@@ -54,8 +54,6 @@ void AADynamicPawnController::SpawnCharacter()
 				{
 					Possess(SpawnedPawn);
 
-					GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Red, "Spawn");
-
 					CurrentlySpawnedActor = SpawnedPawn;
 
 					if (RowData->CharacterType == EPawnType::TopDown) {
@@ -66,7 +64,7 @@ void AADynamicPawnController::SpawnCharacter()
 						DisplayAttributes((Cast<ABaseCharacter>(SpawnedPawn))->PawnAttributes);
 					}
 					else {
-						// DisplayAttributes((Cast<AFirstPersonPawn>(SpawnedPawn))->PawnAttributeAsset);
+						DisplayAttributes((Cast<AAFirstPersonPawn>(SpawnedPawn))->PawnAttributes);
 					}
 
 				}

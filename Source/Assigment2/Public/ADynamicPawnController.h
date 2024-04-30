@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "BaseCharacter.h"
-
+#include "../AFirstPersonPawn.h"
 #include "FPawnAttributesStruct.h"
 #include "ADynamicPawnController.generated.h"
 

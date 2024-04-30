@@ -50,7 +50,7 @@ ATP_ThirdPersonCharacter::ATP_ThirdPersonCharacter()
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 
-	PawnAttributes = LoadObject<UPawnAttributeAsset>(nullptr, TEXT("/Script/Assigment2.PawnAttributeAsset'/Game/DataAsserts/DT_FirstPersion.DT_FirstPersion'"));
+	PawnAttributes = LoadObject<UPawnAttributeAsset>(nullptr, TEXT("/Script/Assigment2.PawnAttributeAsset'/Game/DataAsserts/DT_ThirdPerson.DT_ThirdPerson'"));
 
 }
 

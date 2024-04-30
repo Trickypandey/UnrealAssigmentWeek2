@@ -53,6 +53,9 @@ public:
 	UPROPERTY(EditAnywhere)
 	float RotateScale;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPawnAttributeAsset* PawnAttributes;
+
 
 private:
 	UPROPERTY(VisibleAnywhere)
